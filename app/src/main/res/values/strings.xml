@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">KCPL</string>
+    <string name="price">TRAILOR+CHA+TERMINAL HANDLE+BL+RAIL</string>
+    <string name="transport">TRANSPORT TO CHINA</string>
+    <string name="transport_conversion">TRANSPORT CONVERSION RATE</string>
+    <string name="ring_yarn">RING YARN STUFFING 40HC</string>
+    <string name="open_yarn">OPEN END YARN STUFFING 40HC</string>
+    <string name="lc_interest">BANK LC INTEREST %</string>
+    <string name="lc_months">LC MONTHS</string>
+    <string name="commision">COMMISSION ON COUNT RATE</string>
+    <string name="insurance">INSURANCE PER 1000</string>
+    <string name="conversion">CONVERSION USD/INR</string>
+    <string name="dbk">DBK</string>
+    <string name="update">UPDATE</string>
+    <string name="variables">Variables</string>
+    <string name="counts">Counts</string>
+    <string name="Share$">Share $</string>
+    <string name="ShareComplete">Share ₹,$</string>
+    <string name="formatting">Formatting</string>
+    <string name="Share$Image">Share Image ($)</string>
+    <string name="rs">\u20B9</string>
+</resources>

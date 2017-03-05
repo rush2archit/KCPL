@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_price"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_transport"
+            android:layout_below="@+id/idet_price"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/idet_price"
+            android:layout_alignStart="@+id/idet_price" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_transport_conversion"
+            android:layout_below="@+id/idet_transport"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/idet_transport"
+            android:layout_alignStart="@+id/idet_transport" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_ring_yarn"
+            android:layout_below="@+id/idet_transport_conversion"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/idet_transport_conversion"
+            android:layout_alignStart="@+id/idet_transport_conversion" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_open_yarn"
+            android:layout_below="@+id/idet_ring_yarn"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/idet_ring_yarn"
+            android:layout_alignStart="@+id/idet_ring_yarn" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_lc_interest"
+            android:layout_below="@+id/idet_open_yarn"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/idet_open_yarn"
+            android:layout_alignStart="@+id/idet_open_yarn" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_lc_months"
+            android:layout_below="@+id/idet_lc_interest"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/idet_lc_interest"
+            android:layout_alignStart="@+id/idet_lc_interest" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_commision"
+            android:layout_below="@+id/idet_lc_months"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_insurance"
+            android:layout_below="@+id/idet_commision"
+            android:layout_alignRight="@+id/idet_commision"
+            android:layout_alignEnd="@+id/idet_commision" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_conversion"
+            android:layout_below="@+id/idet_insurance"
+            android:layout_alignRight="@+id/idet_insurance"
+            android:layout_alignEnd="@+id/idet_insurance" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/idet_dbk"
+            android:layout_below="@+id/idet_conversion"
+            android:layout_alignRight="@+id/idet_conversion"
+            android:layout_alignEnd="@+id/idet_conversion" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/price"
+            android:id="@+id/idtv_price"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/idet_price"
+            android:layout_toStartOf="@+id/idet_price"
+            android:layout_above="@+id/idet_transport"
+            android:gravity="center_vertical|end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/transport"
+            android:id="@+id/idtv_transport"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/idet_price"
+            android:layout_toStartOf="@+id/idet_price"
+            android:layout_alignBottom="@+id/idet_transport"
+            android:gravity="center_vertical|end"
+            android:layout_below="@+id/idet_price" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/transport_conversion"
+            android:id="@+id/idtv_transport_conversion"
+            android:layout_alignBottom="@+id/idet_transport_conversion"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/idet_transport_conversion"
+            android:layout_toStartOf="@+id/idet_transport_conversion"
+            android:layout_alignTop="@+id/idet_transport_conversion"
+            android:gravity="center_vertical|end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/ring_yarn"
+            android:id="@+id/idtv_ring_yarn"
+            android:layout_alignBottom="@+id/idet_ring_yarn"
+            android:layout_toLeftOf="@+id/idet_transport_conversion"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/idet_transport_conversion"
+            android:gravity="center_vertical|end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/open_yarn"
+            android:id="@+id/idtv_open_yarn"
+            android:layout_alignBottom="@+id/idet_open_yarn"
+            android:layout_toLeftOf="@+id/idet_ring_yarn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/idet_open_yarn"
+            android:gravity="center_vertical|end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/lc_interest"
+            android:id="@+id/idtv_lc_interest"
+            android:layout_alignBottom="@+id/idet_lc_interest"
+            android:layout_toLeftOf="@+id/idet_open_yarn"
+            android:layout_alignTop="@+id/idet_lc_interest"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical|end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/lc_months"
+            android:id="@+id/idtv_lc_months"
+            android:layout_alignBottom="@+id/idet_lc_months"
+            android:layout_toLeftOf="@+id/idet_lc_interest"
+            android:layout_alignTop="@+id/idet_lc_months"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical|end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/commision"
+            android:id="@+id/idtv_commision"
+            android:layout_alignBottom="@+id/idet_commision"
+            android:layout_toLeftOf="@+id/idet_lc_months"
+            android:layout_below="@+id/idet_lc_months"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical|end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/insurance"
+            android:id="@+id/idtv_insurance"
+            android:layout_toLeftOf="@+id/idet_insurance"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@+id/idet_insurance"
+            android:gravity="center_vertical|end"
+            android:layout_below="@+id/idtv_commision" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/conversion"
+            android:id="@+id/idtv_conversion"
+            android:layout_alignBottom="@+id/idet_conversion"
+            android:layout_toLeftOf="@+id/idet_insurance"
+            android:layout_below="@+id/idet_insurance"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical|end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/dbk"
+            android:id="@+id/idtv_dbk"
+            android:layout_alignBottom="@+id/idet_dbk"
+            android:layout_toLeftOf="@+id/idet_conversion"
+            android:layout_alignTop="@+id/idet_dbk"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical|end" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update"
+            android:id="@+id/idb_update"
+            android:layout_below="@+id/idet_dbk"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/idet_dbk"
+            android:layout_alignEnd="@+id/idet_dbk" />
+
+    </RelativeLayout>
+</ScrollView>

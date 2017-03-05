@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/idm_variables"
+        android:title="@string/variables"/>
+
+    <item
+        android:id="@+id/idm_format"
+        android:title="@string/formatting"/>
+</menu>
