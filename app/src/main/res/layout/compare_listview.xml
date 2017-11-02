@@ -3,7 +3,8 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/myLayout">
+        android:id="@+id/myLayout"
+        >
 
         <TextView
             android:id="@+id/id_countVariant"
@@ -13,12 +14,14 @@
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
+
         <TextView
             android:id="@+id/id_INR"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
+
 
         <TextView
             android:id="@+id/id_$"
@@ -27,10 +30,13 @@
             android:layout_weight="0.8"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
+
         <TextView
             android:id="@+id/id_f$"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+
     </LinearLayout>

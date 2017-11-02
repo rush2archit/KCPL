@@ -19,4 +19,7 @@
     <string name="formatting">Formatting</string>
     <string name="Share$Image">Share Image ($)</string>
     <string name="rs">\u20B9</string>
+    <string name="categories">Categories</string>
+    <string name="newhorf">New</string>
+    <string name="formatsettings">Format Settings</string>
 </resources>

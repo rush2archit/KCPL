@@ -2,7 +2,6 @@ package kamalcotspin.kcpl;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -21,8 +20,7 @@ import java.util.Map;
 /**
  * Created by AT on 3/28/2016.
  */
-public class CountFile extends Activity {
-    String countType;
+public class Categories extends Activity {
     String path = Environment.getExternalStorageDirectory().getPath() + "//kcpl//";
     DBController controller = new DBController(this);
     HashMap<String, String> queryValues;
@@ -35,16 +33,9 @@ public class CountFile extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        countType = getIntent().getExtras().getString("countType");
-
-        if (countType.equalsIgnoreCase("ALL")){
-            Toast.makeText(this, "Edit prices in their own Window", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
 
         ActionBar ab = getActionBar();
-        ab.setTitle(countType);
+        ab.setTitle("Count Types");
 
         scroll = new ScrollView(this);
         main = new LinearLayout(this);
@@ -72,25 +63,20 @@ public class CountFile extends Activity {
             public void onClick(View arg0) {
                 String collectData = "";
                 queryValues = new HashMap<String, String>();
+                controller.deleteTable("countTypes");
                 for (EditText editText : editTexts) {
-                    if (editText.getText().toString().matches("([0-9]*)\\:([0-9]*)(\\.\\d+)?")) {
+                    if (editText.getText().toString().length()>0) {
                         collectData = editText.getText().toString();
-                        queryValues.put("countVariant", collectData.split(":")[0]);
-                        queryValues.put("countType", countType);
-                        queryValues.put("countPrice", collectData.split(":")[1]);
+                        queryValues.put("countType", collectData);
                         // Insert User into SQLite DB
-                        controller.insertCount(queryValues);
-                        //Toast.makeText(CountFile.this, "Phone Data Updated", Toast.LENGTH_SHORT).show();
-
+                        controller.updateTypes(queryValues);
+                        //Toast.makeText(Categories.this, "Phone Data Updated", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                     else {
-                        Toast.makeText(CountFile.this, "Enter the data in proper format \n for eg - 30:120.50", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Categories.this, "Enter the data in proper format \n for eg - 30:120.50", Toast.LENGTH_SHORT).show();
                     }
                 }
-                Intent openQuote = new Intent("kamalcotspin.kcpl.QUOTE");
-                openQuote.putExtra("MA_Count",countType);
-                startActivity(openQuote);
-                finish();
             }
         });
 
@@ -98,9 +84,9 @@ public class CountFile extends Activity {
         main.addView(submit);
         setContentView(scroll);
 
-        ArrayList<HashMap<String, String>> userList = controller.getAllCounts(countType);
-        for (Map<String, String> entry : userList) {
-            addEditText(entry.get("countVariant") + ":" +entry.get("countPrice"));
+        String Types[] = controller.getCountTypes();
+        for (String s : Types) {
+            addEditText(s);
         }
     }
 
@@ -115,7 +101,7 @@ public class CountFile extends Activity {
 
         editTexts.add(editText1);
         if (pair.equals("") || pair.equals(null)) {
-            editText1.setHint("count:price");
+            editText1.setHint("Enter Type here");
         } else {
             editText1.setText(pair);
         }

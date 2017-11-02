@@ -5,6 +5,6 @@
         android:title="@string/variables"/>
 
     <item
-        android:id="@+id/idm_format"
+        android:id="@+id/idm_titlecontent"
         android:title="@string/formatting"/>
 </menu>

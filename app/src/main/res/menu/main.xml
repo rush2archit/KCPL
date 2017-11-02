@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/idm_refresh"
+        android:enabled="true"
+        android:icon="@mipmap/ic_action_refresh"
+        android:title="@string/app_name"
+        android:visible="true"
+        android:showAsAction="always" />
+    <item
+        android:id="@+id/idm_variable"
+        android:title="@string/variables">
+        <menu>
+            <item
+                android:id="@+id/idm_r1"
+                android:title="R1" />
+            <item
+                android:id="@+id/idm_r2"
+                android:title="R2" />
+            <item
+                android:id="@+id/idm_r3"
+                android:title="R3" />
+            <item
+                android:id="@+id/idm_variables"
+                android:title="Variables" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/idm_formats"
+        android:title="Format Settings">
+        <menu>
+            <item
+                android:id="@+id/idm_header"
+                android:title="Header" />
+            <item
+                android:id="@+id/idm_footer"
+                android:title="Footer" />
+            <item
+                android:id="@+id/idm_formatsettings"
+                android:title="@string/formatsettings" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/idm_categories"
+        android:title="@string/categories" />
+</menu>

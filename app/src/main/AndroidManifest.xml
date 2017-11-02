@@ -6,8 +6,8 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission
     android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
-
+    <uses-permission
+        android:name="android.permission.INTERNET"/>
 
 
     <application
@@ -17,7 +17,6 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
 
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="kcpl.kamalcotspin.fileprovider"
@@ -26,7 +25,6 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
-
         </provider>
 
 
@@ -34,49 +32,80 @@
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="kamalcotspin.kcpl.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
 
         <activity android:name=".Variables">
             <intent-filter>
                 <action android:name="kamalcotspin.kcpl.VARIABLES" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".Quote">
             <intent-filter>
                 <action android:name="kamalcotspin.kcpl.QUOTE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
 
         <activity android:name=".CountFile">
             <intent-filter>
                 <action android:name="kamalcotspin.kcpl.COUNTFILE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".Format">
+
+        <activity android:name=".TitleContent">
             <intent-filter>
-                <action android:name="kamalcotspin.kcpl.FORMAT" />
-
+                <action android:name="kamalcotspin.kcpl.TITLECONTENT" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+
+        <activity android:name=".Compare">
+            <intent-filter>
+                <action android:name="kamalcotspin.kcpl.COMPARE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".Categories">
+            <intent-filter>
+                <action android:name="kamalcotspin.kcpl.CATEGORIES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".HeadNFoot">
+            <intent-filter>
+                <action android:name="kamalcotspin.kcpl.HEADNFOOT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".FormatSettings">
+            <intent-filter>
+                <action android:name="kamalcotspin.kcpl.FORMATSETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
