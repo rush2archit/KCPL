@@ -1,8 +1,9 @@
 package kamalcotspin.kcpl;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,14 +15,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -33,7 +32,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,10 +42,10 @@ import java.util.Map;
  */
 public class Quote extends ListActivity {
     String countType;
-    String prefix, suffix,tStamp,shareString="";
+    String prefix, suffix,tStamp,shareString="",shareSelectQuote="";
     String path = Environment.getExternalStorageDirectory().getPath() + "//kcpl//";
     String sharePath = path + "share//";
-    String[] countVariant, amountRs, amount$, amountf$,countVType;
+    String[] countVariant, amountRs, amount$, amountf$,countVType, countPrice;
 
     DBController controller = new DBController(this);
     ArrayList<HashMap<String, String>> flagList;
@@ -62,7 +60,6 @@ public class Quote extends ListActivity {
         ActionBar ab = getActionBar();
         ab.setTitle(countType);
 
-
         File folder = new File(path);
         File folderShare = new File(sharePath);
         if (!(folder.exists())) {
@@ -74,7 +71,6 @@ public class Quote extends ListActivity {
 
 
         File Variables = new File(path, "parameters.txt");
-        //File formatter = new File(path, "format.txt");
 
         flagList = controller.getFlags();
         for (Map<String, String> entry : flagList) {
@@ -113,31 +109,6 @@ public class Quote extends ListActivity {
             }
         }
 
-        /*if (formatter.exists()) {
-            try {
-                FileReader fr2 = new FileReader(path + "format.txt");
-                @SuppressWarnings("resource")
-                BufferedReader br2 = new BufferedReader(fr2);
-                String reader, hf = "";
-                while ((reader = br2.readLine()) != null) {
-                    hf = hf + reader + "\n";
-                }
-                String[] hnf1 = hf.split("#");
-                prefix = hnf1[0];
-                suffix = hnf1[1];
-                if (hnf1[0].equals("-")) {
-                    prefix = "";
-                }
-                if (hnf1[1].equals("-")) {
-                    suffix = "";
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            prefix = suffix = "";
-        }*/
-
         if (Variables.exists()) {
             try {
                 FileReader fr1 = new FileReader(path + "parameters.txt");
@@ -158,19 +129,16 @@ public class Quote extends ListActivity {
                 float dbk = Float.parseFloat(parameters[10]);
                 float yarn;
 
-                //System.out.println("yarn value" + yarn);
                 ArrayList<HashMap<String, String>> userList = controller.getAllCounts(countType);
 
-                /*FileReader fr = new FileReader(path + filename);
-                BufferedReader br = new BufferedReader(fr);
-                String co = br.readLine();
-                */if (userList.size() == 0) {
+                if (userList.size() == 0) {
                     Toast.makeText(this, "Enter Count & Price Details", Toast.LENGTH_SHORT).show();
                 } else {
 
                     //String[] count1 = co.split("/");
                     countVariant = new String[userList.size()];
                     countVType = new String[userList.size()];
+                    countPrice = new String[userList.size()];
                     amountRs = new String[userList.size()];
                     amount$ = new String[userList.size()];
                     amountf$ = new String[userList.size()];
@@ -178,16 +146,9 @@ public class Quote extends ListActivity {
 
 
                     for (Map<String, String> entry : userList) {
-                        //System.out.println(entry.get("countPrice")+" : "+entry.get("countType")+" : "+entry.get("countVariant"));
-
-
-                    /*for (String s : count1) {
-                        String[] pair = s.split(":");
-                        countVariant[i] = pair[0];
-                        float countPrice = Float.parseFloat(pair[1]);
-                        */
                         countVariant[i] = entry.get("countVariant");
                         countVType[i] = entry.get("countType");
+                        countPrice[i] = entry.get("countPrice");
                         float countPrice = Float.parseFloat(entry.get("countPrice"));
 
                         if (countVType[i].substring(0, 2).equalsIgnoreCase("OE")) {
@@ -220,30 +181,8 @@ public class Quote extends ListActivity {
                         amountf$[i] = String.format("%.2f", famt$);
 
                         i++;
-/*
-                        System.out.println(calc1);
-                        System.out.println(calc2);
-                        System.out.println(calc3);
-                        System.out.println(calc4);
-                        System.out.println(calc5);
-                        System.out.println(calc6);
-                        System.out.println(calc7);
-                        System.out.println(calc8);
-                        System.out.println(calc9);
-                        System.out.println(calc10);
-                        System.out.println(calc11);
-                        System.out.println(calc12);
-                        System.out.println(amtRs);
-                        System.out.println(amt$);
-                        System.out.println(calc13);
-                        System.out.println(famt$);
-                        System.out.println(pair[0] + "--" + amtRs + "--" + amt$);
-*/
                     }
 
-
-
-                    //prefix = tStamp + "\n\n" + prefix + "\n\n";
                     prefix = shareString;
                     ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
                     int j = 0;
@@ -262,14 +201,15 @@ public class Quote extends ListActivity {
                             new String[]{"Variant", "amtRs", "amt$", "famt$"}, new int[]{R.id.id_countVariant, R.id.id_INR, R.id.id_$, R.id.id_f$},coloredItems);
                     setListAdapter(quoteDisplay);
                     getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
                     getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override
                         public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                                        int position, long arg3) {
 
                             Intent openCompare  = new Intent("kamalcotspin.kcpl.COMPARE");
-                            openCompare.putExtra("count",countVariant[position] + " "+countVType[position]);
+                            openCompare.putExtra("countVariant",countVariant[position]);
+                            openCompare.putExtra("countType",countVType[position]);
+                            openCompare.putExtra("countPrice",countPrice[position]);
                             startActivity(openCompare);
                             return true;
                         }
@@ -299,19 +239,21 @@ public class Quote extends ListActivity {
         }
     }
 
-
-
-
-
 @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.counts, menu);
         return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        ListView l = this.getListView();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose Footer");
+        String c1[] = controller.getTitle("f");
+
         switch (item.getItemId()) {
             case R.id.idm_counts:
                 Intent openCountPrice = new Intent("kamalcotspin.kcpl.COUNTFILE");
@@ -321,135 +263,163 @@ public class Quote extends ListActivity {
                 return true;
 
             case R.id.idm_$:
-                ListView l = this.getListView();
-                String shareSelectQuote = prefix;
-                for (int i=0;i<l.getCheckedItemPositions().size();i++){
-                    if(l.getCheckedItemPositions().valueAt(i)){
+                shareSelectQuote = prefix;
+                for (int i = 0; i < l.getCheckedItemPositions().size(); i++) {
+                    if (l.getCheckedItemPositions().valueAt(i)) {
                         int a = l.getCheckedItemPositions().keyAt(i);
-                        shareSelectQuote = shareSelectQuote+countVariant[a]+" " +countVType[a] + "\t" + amountf$[a]+ "$" + "\n" ;
+                        shareSelectQuote = shareSelectQuote + countVariant[a] + " " + countVType[a] + "\t" + amountf$[a] + "$" + "\n";
                     }
                 }
-                shareSelectQuote = shareSelectQuote + "\n" +suffix;
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, shareSelectQuote);
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+                builder.setItems(c1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startIntent(which);
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 return true;
 
             case R.id.idm_₹$:
-                l = this.getListView();
                 shareSelectQuote = prefix;
-                for (int i=0;i<l.getCheckedItemPositions().size();i++){
-                    if(l.getCheckedItemPositions().valueAt(i)){
+                for (int i = 0; i < l.getCheckedItemPositions().size(); i++) {
+                    if (l.getCheckedItemPositions().valueAt(i)) {
                         int a = l.getCheckedItemPositions().keyAt(i);
-                        shareSelectQuote = shareSelectQuote+countVariant[a]+ " " +countVType[a] + "\t" + "₹" +amountRs[a]+ "\t" + amountf$[a]+ "$" + "\n" ;
+                        shareSelectQuote = shareSelectQuote + countVariant[a] + " " + countVType[a] + "\t" + "₹" + amountRs[a] + "\t" + amountf$[a] + "$" + "\n";
                     }
                 }
+                builder.setItems(c1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startIntent(which);
+                    }
+                });
 
-                shareSelectQuote = shareSelectQuote + "\n" +suffix;
-                shareSelectQuote = shareSelectQuote.replaceAll("([\\n\\r]+\\s*)*$", "");
-                Intent sendIntent1 = new Intent();
-                sendIntent1.setAction(Intent.ACTION_SEND);
-                sendIntent1.putExtra(Intent.EXTRA_TEXT, shareSelectQuote);
-                sendIntent1.setType("text/plain");
-                startActivity(sendIntent1);
+                AlertDialog dialog1 = builder.create();
+                dialog1.show();
                 return true;
 
             case R.id.idm_$image:
-                    ListView l3 = this.getListView();
-                    String ShareImageName = String.valueOf(System.currentTimeMillis())+".jpg";
-                    shareSelectQuote = prefix;
-
-                for (int i=0;i<l3.getCheckedItemPositions().size();i++){
-                        if(l3.getCheckedItemPositions().valueAt(i)){
-                            int a = l3.getCheckedItemPositions().keyAt(i);
-                            shareSelectQuote = shareSelectQuote+countVariant[a]+" " +countVType[a] + "\t\t\t" + amountf$[a]+ "$" + "\n" ;
-                        }
+                shareSelectQuote = prefix;
+                for (int i = 0; i < l.getCheckedItemPositions().size(); i++) {
+                    if (l.getCheckedItemPositions().valueAt(i)) {
+                        int a = l.getCheckedItemPositions().keyAt(i);
+                        shareSelectQuote = shareSelectQuote + countVariant[a] + " " + countVType[a] + "\t\t\t" + amountf$[a] + "$" + "\n";
                     }
-                shareSelectQuote = shareSelectQuote + "\n" +suffix;
-
-                    Bitmap src = BitmapFactory.decodeResource(getResources(), R.drawable.kcpllogo); // the original file yourimage.jpg i added in resources
-
-                    String[] print = shareSelectQuote.split("\n");
-                    int x = print.length;
-                    int height = src.getHeight()*2;
-                    if (x*50 > height)
-                    {
-                        height = x*50+50;
-                    }
-                    int width = src.getWidth()*2;
-
-
-                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                    Canvas cs = new Canvas(bitmap);
-
-                    Paint paint = new Paint();
-                    paint.setColor(Color.WHITE);
-                    paint.setStyle(Paint.Style.FILL);
-                    cs.drawPaint(paint);
-                    cs.drawBitmap(src,width/4,height/3,paint);
-
-                    Paint p2 = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    p2.setColor(Color.BLACK);
-                    p2.setAntiAlias(true);
-                    p2.setTextSize(40.f);
-                    p2.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-                    p2.setTextAlign(Paint.Align.LEFT);
-
-                    float height1 = 50.f;
-                    float width1 = 50.f;
-
-                    for (String s : print){
-                        cs.drawText(s, width1, height1, p2);
-                        height1 = height1+50.f;
-                    }
-
-                    try {
-                        File file = new File(sharePath);
-                        String[] files;
-                        files = file.list();
-                        if(files!=null) {
-                            for (int i = 0; i < files.length; i++) {
-                                File myFile = new File(file, files[i]);
-                                myFile.delete();
-                            }
-                        }
-
-                        OutputStream outStream = null;
-                        outStream = new FileOutputStream(sharePath+ShareImageName);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-                        outStream.flush();
-                        outStream.close();
-
-                        Intent sendIntent2 = new Intent();
-                        sendIntent2.setAction(Intent.ACTION_SEND);
-                        sendIntent2.setType("image/*");
-                        Uri fileUri = FileProvider.getUriForFile(this, "kcpl.kamalcotspin.fileprovider", new File(sharePath+ShareImageName));
-                        sendIntent2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        sendIntent2.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        sendIntent2.putExtra(Intent.EXTRA_STREAM, fileUri);
-                        this.startActivity(Intent.createChooser(sendIntent2, "Share Image"));
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
                 }
+                builder.setItems(c1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startIntentImage(which);
+                    }
+                });
+
+                AlertDialog dialog2 = builder.create();
+                dialog2.show();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
 
+    /*@Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Select The Action");
+        menu.add(0, v.getId(), 0, "Call");//groupId, itemId, order, title
+        menu.add(0, v.getId(), 0, "SMS");
+    }*/
+
+    public void startIntent(int x){
+        suffix = controller.getContent(controller.getTitle("f")[x])[0];
+        shareSelectQuote = shareSelectQuote + "\n" +suffix;
+        shareSelectQuote = shareSelectQuote.replaceAll("([\\n\\r]+\\s*)*$", "");
+        Intent sendIntent1 = new Intent();
+        sendIntent1.setAction(Intent.ACTION_SEND);
+        sendIntent1.putExtra(Intent.EXTRA_TEXT, shareSelectQuote);
+        sendIntent1.setType("text/plain");
+        startActivity(sendIntent1);
     }
 
 
-/*    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "Sample Long Click", Toast.LENGTH_SHORT).show();
-        return false;
-    }*/
+    public void startIntentImage(int which){
+        String ShareImageName = String.valueOf(System.currentTimeMillis())+".jpg";
+        suffix = controller.getContent(controller.getTitle("f")[which])[0];
+        shareSelectQuote = shareSelectQuote + "\n" +suffix;
+
+        Bitmap src = BitmapFactory.decodeResource(getResources(), R.drawable.kcpllogo); // the original file yourimage.jpg i added in resources
+
+        String[] print = shareSelectQuote.split("\n");
+        int x = print.length;
+        int height = src.getHeight()*2;
+        if (x*50 > height)
+        {
+            height = x*50+50;
+        }
+        int width = src.getWidth()*2;
+
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas cs = new Canvas(bitmap);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        cs.drawPaint(paint);
+        cs.drawBitmap(src,width/4,height/3,paint);
+
+        Paint p2 = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p2.setColor(Color.BLACK);
+        p2.setAntiAlias(true);
+        p2.setTextSize(40.f);
+        p2.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        p2.setTextAlign(Paint.Align.LEFT);
+
+        float height1 = 50.f;
+        float width1 = 50.f;
+
+        for (String s : print){
+            cs.drawText(s, width1, height1, p2);
+            height1 = height1+50.f;
+        }
+
+        try {
+            File file = new File(sharePath);
+            String[] files;
+            files = file.list();
+            if(files!=null) {
+                for (int i = 0; i < files.length; i++) {
+                    File myFile = new File(file, files[i]);
+                    myFile.delete();
+                }
+            }
+
+            OutputStream outStream = null;
+            outStream = new FileOutputStream(sharePath+ShareImageName);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+
+            Intent sendIntent2 = new Intent();
+            sendIntent2.setAction(Intent.ACTION_SEND);
+            sendIntent2.setType("image/*");
+            Uri fileUri = FileProvider.getUriForFile(this, "kcpl.kamalcotspin.fileprovider", new File(sharePath+ShareImageName));
+            sendIntent2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            sendIntent2.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            sendIntent2.putExtra(Intent.EXTRA_STREAM, fileUri);
+            this.startActivity(Intent.createChooser(sendIntent2, "Share Image"));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
 }

@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">KCPL</string>
     <string name="price">TRAILOR+CHA+TERMINAL HANDLE+BL+RAIL</string>
+    <string name="commissioncrateinr">Commission on count rate(₹)</string>
+    <string name="commissioncrateusd">Commission on count rate($)</string>
+    <string name="totamtb4commissioninkg">Total Amt b4 Commission &amp; Insurance(KG)</string>
+    <string name="total">Total</string>
+    <string name="bankcommission">Bank Commission</string>
+    <string name="bankcommissionkg">Bank Commission(KG)</string>
+    <string name="totamtb4insurance">Total Amt b4 Insurance</string>
+    <string name="insurance1">Insurance</string>
     <string name="transport">TRANSPORT TO CHINA</string>
     <string name="transport_conversion">TRANSPORT CONVERSION RATE</string>
     <string name="ring_yarn">RING YARN STUFFING 40HC</string>
@@ -10,7 +18,8 @@
     <string name="commision">COMMISSION ON COUNT RATE</string>
     <string name="insurance">INSURANCE PER 1000</string>
     <string name="conversion">CONVERSION USD/INR</string>
-    <string name="dbk">DBK</string>
+    <string name="lessdbk">less DBK @ 3%</string>
+    <string name="dbksimple">DBK</string>
     <string name="update">UPDATE</string>
     <string name="variables">Variables</string>
     <string name="counts">Counts</string>
@@ -22,4 +31,7 @@
     <string name="categories">Categories</string>
     <string name="newhorf">New</string>
     <string name="formatsettings">Format Settings</string>
+    <string name="finalamount">Final Amount</string>
+    <string name="finalamount₹">Final Amount ₹</string>
+    <string name="finalamount$">Final Amount $</string>
 </resources>

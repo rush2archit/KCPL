@@ -12,11 +12,16 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.File;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by AT on 3/28/2016.
@@ -79,8 +84,17 @@ public class CountFile extends Activity {
                         queryValues.put("countType", countType);
                         queryValues.put("countPrice", collectData.split(":")[1]);
                         // Insert User into SQLite DB
-                        controller.insertCount(queryValues);
-                        //Toast.makeText(CountFile.this, "Phone Data Updated", Toast.LENGTH_SHORT).show();
+                        //controller.insertCount(queryValues);
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+                        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+                        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                        try {
+                            controller.insertChangedCount(countType,collectData.split(":")[0],collectData.split(":")[1], sdf.format(timestamp),"local");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                     else {

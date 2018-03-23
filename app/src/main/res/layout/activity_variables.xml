@@ -264,17 +264,17 @@
             android:gravity="center_vertical|end" />
 
         <TextView
+            android:id="@+id/idtv_dbk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearance"
-            android:text="@string/dbk"
-            android:id="@+id/idtv_dbk"
             android:layout_alignBottom="@+id/idet_dbk"
-            android:layout_toLeftOf="@+id/idet_conversion"
-            android:layout_alignTop="@+id/idet_dbk"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:gravity="center_vertical|end" />
+            android:layout_alignTop="@+id/idet_dbk"
+            android:layout_toLeftOf="@+id/idet_conversion"
+            android:gravity="center_vertical|end"
+            android:text="@string/dbksimple"
+            android:textAppearance="?android:attr/textAppearance" />
 
         <Button
             android:layout_width="wrap_content"

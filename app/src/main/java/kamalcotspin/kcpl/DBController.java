@@ -5,8 +5,11 @@ package kamalcotspin.kcpl;
  */
 
         import java.io.File;
+        import java.sql.Timestamp;
+        import java.text.SimpleDateFormat;
         import java.util.ArrayList;
         import java.util.HashMap;
+        import java.util.TimeZone;
 
         import android.content.ContentValues;
         import android.content.Context;
@@ -14,6 +17,12 @@ package kamalcotspin.kcpl;
         import android.database.sqlite.SQLiteDatabase;
         import android.database.sqlite.SQLiteOpenHelper;
         import android.os.Environment;
+
+        import com.google.gson.Gson;
+        import com.google.gson.GsonBuilder;
+
+        import org.json.JSONException;
+        import org.json.JSONObject;
 
 public class DBController  extends SQLiteOpenHelper {
 
@@ -24,19 +33,23 @@ public class DBController  extends SQLiteOpenHelper {
     //Creates Table
     @Override
     public void onCreate(SQLiteDatabase database) {
-        String query1,query2,query3,query4,query5,query6;
-        query1 = "CREATE TABLE countDetails ( countType TEXT, countVariant TEXT, countPrice REAL , PRIMARY KEY (countType, countVariant))";
+        String query1,query2,query3,query4,query5,query6,query7,query8;
+        query1 = "CREATE TABLE countDetails ( countType TEXT, countVariant TEXT, countPrice REAL , changeTime TEXT, PRIMARY KEY (countType, countVariant))";
         query2 = "CREATE TABLE countTypes ( countType TEXT , PRIMARY KEY (countType))";
-        query3 = "INSERT into  countTypes (countType) values ('KW'),('KH'),('CW'),('CH'),('CCW'),('CCH'),('OE 1700'),('OE 1850'),('OE 1900'),('OE others'),('Others'),('ALL')";
+        query3 = "INSERT into  countTypes ( countType ) values ('KW'),('KH'),('CW'),('CH'),('CCW'),('CCH'),('OE 1700'),('OE 1850'),('OE 1900'),('OE others'),('Others'),('ALL')";
         query4 = "CREATE TABLE headnfoot ( title TEXT, content TEXT, horf TEXT , active INTEGER ,PRIMARY KEY (title))";
         query5 = "CREATE TABLE flags ( flagname TEXT, flagvalue TEXT, PRIMARY KEY (flagname))";
-        query6 = "INSERT into  flags (flagname,flagvalue) values ('timestamp','0'),('header','0'),('footer','0')";
+        query6 = "INSERT into  flags ( flagname,flagvalue ) values ('timestamp','0'),('header','0'),('footer','0')";
+        query7 = "CREATE TABLE variables ( variablename TEXT, varvalue TEXT, PRIMARY KEY (variablename))";
+        query8 = "INSERT into  variables( variablename,varvalue ) values ('lastsynctime','20170000000000')";
         database.execSQL(query1);
         database.execSQL(query2);
         database.execSQL(query3);
         database.execSQL(query4);
         database.execSQL(query5);
         database.execSQL(query6);
+        database.execSQL(query7);
+        database.execSQL(query8);
     }
 
     @Override
@@ -61,6 +74,36 @@ public class DBController  extends SQLiteOpenHelper {
         database.replace("countDetails", null, values);
         database.close();
     }
+
+    public void insertChangedCount(String cT, String cV, String cP, String cTm, String source) throws JSONException {
+        String selectQuery = "SELECT countPrice,changeTime FROM countDetails where countType like '" + cT + "' and countVariant like '" + cV + "'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        String countPrice = new String();
+        String changeTime = new String();
+        if (cursor.moveToFirst() && cursor.getCount() != 0 ) {
+            countPrice = cursor.getString(0);
+            changeTime = cursor.getString(1);
+            if ((changeTime == null || Long.parseLong(cTm) > Long.parseLong(changeTime)) && source.equals("server")) {
+                String updateQuery = "UPDATE countDetails SET countPrice = '" + cP + "', " +
+                        "changeTime = '" + cTm + "'WHERE countType like '" + cT + "' and countVariant like '" + cV + "'";
+                database.execSQL(updateQuery);
+            }
+            else if ((!cP.equals(countPrice)) && source.equals("local")){
+
+                String updateQuery = "UPDATE countDetails SET countPrice = '" + cP + "', " +
+                        "changeTime = '" + cTm + "'WHERE countType like '" + cT + "' and countVariant like '" + cV + "'";
+                database.execSQL(updateQuery);
+            }
+        } else if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+            String insertQuery = "insert into countDetails (countType,countVariant,countPrice,changeTime) " +
+                    "values ('" + cT + "','" + cV + "','" + cP + "','" + cTm + "')";
+            database.execSQL(insertQuery);
+        }
+    }
+
+
+
 
     public void updateTypes(HashMap<String, String> queryValues) {
         //System.out.println(queryValues);
@@ -91,7 +134,7 @@ public class DBController  extends SQLiteOpenHelper {
             selectQuery = "SELECT  * FROM countDetails where countType in (select * from countTypes)order by countType,countVariant";
         }
         else {
-            selectQuery = "SELECT  * FROM countDetails where countType like '" + countType+"'";
+            selectQuery = "SELECT  * FROM countDetails where countType like '" + countType+"' order by countVariant";
         }
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
@@ -217,5 +260,51 @@ public class DBController  extends SQLiteOpenHelper {
         }
         database.close();
         return flagList;
+    }
+
+
+    public String getLastSyncTime() {
+        String selectQuery = "SELECT varvalue FROM variables where variablename like 'lastsynctime'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        String lastsynctime = new String();
+        if (cursor.moveToFirst()) {
+                lastsynctime = cursor.getString(0);
+        }
+        database.close();
+        return lastsynctime;
+    }
+
+    public void updateLastSyncTime() {
+        //String lastsynctime;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        //Date date = new Date();
+        SQLiteDatabase database = this.getWritableDatabase();
+        String updateQuery = "UPDATE variables SET varvalue = '"+sdf.format(timestamp)+"' WHERE variablename like 'lastsynctime'";
+        database.execSQL(updateQuery);
+    }
+
+    public String getStringToUpdate() {
+        Gson gson = new GsonBuilder().create();
+        ArrayList<HashMap<String, String>> countsList;
+        countsList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM countDetails where changeTime > '" + getLastSyncTime()+"'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("cT", cursor.getString(0));
+                map.put("cV", cursor.getString(1));
+                map.put("cP", cursor.getString(2));
+                map.put("cTm", cursor.getString(3));
+                countsList.add(map);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return gson.toJson(countsList);
     }
 }

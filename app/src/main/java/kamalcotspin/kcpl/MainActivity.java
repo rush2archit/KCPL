@@ -69,7 +69,9 @@ public class MainActivity extends Activity implements View.OnClickListener,Adapt
                 return true;*/
 
             case R.id.idm_refresh:
+                String json = controller.getStringToUpdate();
                 syncSQLiteMySQLDB();
+                updateMySQLCountDetails(json);
                 return true;
 
             case R.id.idm_categories:
@@ -103,9 +105,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Adapt
     @Override
     public void onClick(View v) {
     }
-
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
             finish();
             System.exit(0);
     }
@@ -125,17 +125,16 @@ public class MainActivity extends Activity implements View.OnClickListener,Adapt
         RequestParams params = new RequestParams();
         // Show ProgressBar
         prgDialog.show();
+
         // Make Http call to getusers.php
-        client.post("https://kcpl.000webhostapp.com/mysqlsqlitesync/getusers.php", params, new AsyncHttpResponseHandler() {
+        client.post("https://kcpl.000webhostapp.com/mysqlsqlitesync/getCount.php?lastsynctime="+controller.getLastSyncTime(), params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
                 // Hide ProgressBar
                 prgDialog.hide();
                 // Update SQLite DB with response sent by getusers.php
-
                 updateSQLite(response);
             }
-
             // When error occured
             @Override
             public void onFailure(int statusCode, Throwable error, String content) {
@@ -162,28 +161,41 @@ public class MainActivity extends Activity implements View.OnClickListener,Adapt
             JSONArray arr = new JSONArray(response);
             // If no of array elements is not zero
             if(arr.length() != 0){
-                // Loop through each array element, get JSON object which has userid and username
+                // Loop through each array element, get JSON object which has count details
                 for (int i = 0; i < arr.length(); i++) {
                     // Get JSON object
                     JSONObject obj = (JSONObject) arr.get(i);
                     // DB QueryValues Object to insert into SQLite
-                    queryValues = new HashMap<String, String>();
+                    /*queryValues = new HashMap<String, String>();
                     queryValues.put("countType", obj.get("cT").toString());
                     queryValues.put("countVariant", obj.get("cV").toString());
-                    queryValues.put("countPrice", obj.get("cP").toString());
+                    queryValues.put("countPrice", obj.get("cP").toString());*/
                     // Insert User into SQLite DB
-                    controller.insertCount(queryValues);
+                    //controller.insertCount(queryValues);
+                    controller.insertChangedCount(obj.get("cT").toString(),obj.get("cV").toString(),obj.get("cP").toString(),obj.get("cTm").toString(),"server");
                 }
-                //Toast.makeText(this, "Getting from db" + controller.getAllCounts("kc"), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(this, "Local Database Updated", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-
-
-
+    public void updateMySQLCountDetails(String json) {
+        System.out.println("----------->"+json);
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("changedLocalData", json);
+        // Make Http call to updatesyncsts.php with JSON parameter which has Sync statuses of Users
+        client.post("https://kcpl.000webhostapp.com/mysqlsqlitesync/updatePhoneCount.php", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                System.out.println(response);
+                controller.updateLastSyncTime();
+            }
+            @Override
+            public void onFailure(int statusCode, Throwable error, String content) {
+                Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
